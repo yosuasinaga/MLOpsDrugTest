@@ -1,38 +1,49 @@
+# Nama workflow
 name: Continuous Integration
 
+# Trigger
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "main" ]
   workflow_dispatch:
 
 permissions: write-all
-
 jobs:
+  # Nama job
   build:
     runs-on: ubuntu-latest
-    
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v3
+      # Checkout kode dari repositori ke runner
+      - name: Checkout Repository
+        uses: actions/checkout@v3
 
-    - name: Install Packages
-      run: make install
+      # Menyiapkan CML
+      - name: Setup CML
+        uses: iterative/setup-cml@v2
+        
+      # Menginstal library yang dibutuhkan dari requirements.txt
+      - name: Install Packages
+        run: make install
 
-    - name: Format Code
-      run: make format
+      # Memformat kode
+      - name: Format Code
+        run: make format
 
-    - name: Train Model
-      run: make train
+      # Train model
+      - name: Train Model
+        run: make train
 
-    - name: Evaluate Model
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: make eval
+      # Mengevaluasi model
+      - name: Evaluate Model
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: make eval
 
-    - name: Update Branch
-      env:
-        NAME: ${{ secrets.USER_NAME }}
-        EMAIL: ${{ secrets.USER_EMAIL }}
-      run: make update-branch USER_NAME=$NAME USER_EMAIL=$EMAIL
+      # Simpan ke branch update
+      - name: Update Branch
+        env:
+          NAME: ${{ secrets.USER_NAME }}
+          EMAIL: ${{ secrets.USER_EMAIL }}
+        run: make update-branch USER_NAME=$NAME USER_EMAIL=$EMAIL
