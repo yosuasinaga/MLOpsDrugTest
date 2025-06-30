@@ -1,6 +1,6 @@
 pandas
 scikit-learn
-matplotlib
+matplotlib>=3.7.0
 skops
 black
 cml
